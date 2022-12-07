@@ -11,11 +11,11 @@ spec:
             selector:
               matchLabels:
                 nginx:  enabled
-          # - git:
-          #     repoURL: https://github.com/akselleirv/argocd-playground.git
-          #     revision: HEAD
-          #     files:
-          #     - path: "clusters/{{ name }}/nginx-ingress-controller-values.yaml"
+          - git:
+              repoURL: https://github.com/akselleirv/argocd-playground.git
+              revision: HEAD
+              files:
+              - path: "clusters/cluster-a/nginx/config.json"
   template:
     metadata:
       name: '{{cluster}}-nginx'
@@ -25,6 +25,12 @@ spec:
         repoURL: https://github.com/akselleirv/argocd-playground.git
         targetRevision: HEAD
         path: 'charts/nginx'
+        helm:
+          releaseName: nginx
+          valueFiles:
+            - values.yaml
+          values: |
+            replicas: {{ .replicas }}
       destination:
         server: '{{server}}'
         namespace: nginx-ingress-controller
