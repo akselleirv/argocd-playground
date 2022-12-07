@@ -1,0 +1,6 @@
+operations/grafana-agent.yaml
+operations/oathkeeper.yaml
+operations/workload-identity-webhook.yaml
+operations/grafana-agent.yaml
+clusters/cluster-a/cluster.yaml
+README.md

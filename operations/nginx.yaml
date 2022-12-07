@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: nginx
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - clusters: 
+            selector:
+              matchLabels:
+                nginx:  enabled
+          # - git:
+          #     repoURL: https://github.com/akselleirv/argocd-playground.git
+          #     revision: HEAD
+          #     files:
+          #     - path: "clusters/{{ name }}/nginx-ingress-controller-values.yaml"
+  template:
+    metadata:
+      name: '{{cluster}}-nginx'
+    spec:
+      project: 'default'
+      source:
+        repoURL: https://github.com/akselleirv/argocd-playground.git
+        targetRevision: HEAD
+        path: 'charts/nginx'
+      destination:
+        server: '{{server}}'
+        namespace: nginx-ingress-controller
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
