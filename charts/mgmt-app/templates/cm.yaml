@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oidc-urls
+data:
+  config.yaml: |-
+    {{ .Values.urls | indent 4 }}

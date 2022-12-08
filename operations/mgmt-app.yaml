@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: mgtm-app
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - clusters:
+        values:
+          clusterServer: '{{ .server }}'
+  template:
+    metadata:
+      name: mgmt-app
+    spec:
+      project: 'default'
+      source:
+        repoURL: https://github.com/akselleirv/argocd-playground.git
+        targetRevision: HEAD
+        path: 'charts/mgmt-app'
+        helm:
+          releaseName: mgmt
+          valueFiles:
+            - values.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: mgmt
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
