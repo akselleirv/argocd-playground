@@ -5,29 +5,17 @@ metadata:
   namespace: argocd
 spec:
   generators:
-  # - clusters: 
-  #     selector:
-  #       matchLabels:
-  #         nginx:  enabled
-    - git:
-        repoURL: https://github.com/akselleirv/argocd-playground.git
-        revision: HEAD
-        files:
-        - path: clusters/cluster-a/nginx/config.yaml
-    # - matrix:
-    #     generators:
-    #       - git:
-    #           repoURL: https://github.com/akselleirv/argocd-playground.git
-    #           revision: HEAD
-    #           files:
-    #           - path: "clusters/cluster-a/nginx/config.json"
-    #       - clusters: 
-    #           selector:
-    #             matchLabels:
-    #               nginx:  enabled
+    - matrix:
+        generators:
+          - clusters: {}
+          - git:
+              repoURL: https://github.com/akselleirv/argocd-playground.git
+              revision: HEAD
+              files:
+              - path: "clusters/{{ name }}/nginx-values.yaml"
   template:
     metadata:
-      name: 'nginx'
+      name: 'nginx-{{ name }}'
     spec:
       project: 'default'
       source:
@@ -35,13 +23,14 @@ spec:
         targetRevision: HEAD
         path: 'charts/nginx'
         helm:
-          releaseName: nginx-{{ .replicas }}
+          releaseName: nginx
           valueFiles:
             - values.yaml
-          # values: |
-          #   replicas: {{ .replicas }}
+          parameters:
+            - name: replicas
+              value: '{{ replicas }}'
       destination:
-        server: https://cluster-a-control-plane:6443
+        server: '{{ server }}'
         namespace: nginx-ingress-controller
       syncPolicy:
         automated:
