@@ -9,6 +9,10 @@ spec:
     - clusters:
         values:
           clusterServer: '{{ .server }}'
+    - clusters:
+        selector:
+          matchLabels:
+            cluster.tnnova.io/mgmt-cluster: enabled
   template:
     metadata:
       name: mgmt-app

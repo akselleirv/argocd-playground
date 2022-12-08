@@ -4,4 +4,4 @@ metadata:
   name: oidc-urls
 data:
   config.yaml: |-
-    {{ .Values.urls | indent 4 }}
+    hello: {{ .Values.key }}
